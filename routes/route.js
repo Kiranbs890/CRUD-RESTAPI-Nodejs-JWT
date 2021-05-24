@@ -2,7 +2,7 @@
 const tower_ctrl = require("../controllers/tower_ctrl");
 const user_ctrl = require("../controllers/user_ctrl");
 
-var VerifyToken = require('../config/verifyToken');
+const VerifyToken = require('../config/verifyToken');
 module.exports = function(express) {
 	const route = express.Router();
 
