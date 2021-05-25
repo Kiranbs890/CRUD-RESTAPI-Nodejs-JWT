@@ -72,7 +72,7 @@ export default class User {
         },
         process.env.APP_SECRET as string,
         {
-          expiresIn: 86400000000000000000000 // expires in 24 hours
+          expiresIn: 8640 // expires in 24 hours
         }
       );
       return res.json({

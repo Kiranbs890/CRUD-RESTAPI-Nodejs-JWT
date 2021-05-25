@@ -1,11 +1,9 @@
 
 import request from 'supertest'
 import redis from 'redis'
-// import express from 'express'
-
-// const app = express();
 import { app } from '../index'
 
+const acessToken = process.env.APP_TEST_ACESSTOKEN;
 jest.mock('../utils/redis', () => ({
   // });
   createClient: jest.fn()
@@ -24,8 +22,8 @@ describe('Testing Tower API', () => {
 
 
       const data = {
-        "name": "ssss",
-        "location": "Diera",
+        "name": "New tower",
+        "location": "Tecom",
         "floors": 15,
         "offices": 30,
         "rating": 7,
@@ -36,7 +34,7 @@ describe('Testing Tower API', () => {
       request(app)
         .post('/api/v1/tower')
         .send(data)
-        .set('x-access-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjIxOTAxMDQ2LCJleHAiOjE2MjE5ODc0NDZ9.2RDYNSR8lCtxkuMJi55W7s227V3K6spWBfj5UrS1fKg')
+        .set('x-access-token',acessToken)
         .set('Accept', 'application/json')
         .expect(200)
         .end(function (err, res) {
@@ -44,4 +42,52 @@ describe('Testing Tower API', () => {
         });
     })
   })
+
+  describe('Update Functionality', () => {
+
+    it('should update data to the database', () => {
+
+      jest.spyOn(redis, 'createClient').mockImplementationOnce(jest.fn())
+
+
+      const data = {
+        "name": "Latifa Towers",
+        "location": "World Trade Center",
+        "floors": 100,
+        "offices": 100,
+        "rating": 7,
+        "latitude": "10.9",
+        "longitude": "111.6"
+      }
+
+      request(app)
+        .put('/api/v1/tower/1')
+        .send(data)
+        .set('x-access-token',acessToken)
+        .set('Accept', 'application/json')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+        });
+    })
+  })
+
+  describe('Delete Functionality', () => {
+
+    it('should delete data to the database', () => {
+
+      jest.spyOn(redis, 'createClient').mockImplementationOnce(jest.fn())
+
+
+      request(app)
+        .delete('/api/v1/tower/2')
+        .set('x-access-token',acessToken)
+        .set('Accept', 'application/json')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+        });
+    })
+  })
+
 })

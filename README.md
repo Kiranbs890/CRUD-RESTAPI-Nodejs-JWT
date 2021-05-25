@@ -1,5 +1,12 @@
 ## Simple CRUD REST API with Express.js
-Basic simple REST API CRUD (Create,Read,Update,Delete) on Nodejs using framework Express JS featuring Sequelize ORM with database MySQL.
+Simple REST API CRUD (Create,Read,Update,Delete) on Nodejs using framework Express JS featuring Sequelize ORM with database MySQL.
+
+Project includes
+- Redis cache implementation for list API
+- Socket for notifications on CRUD.
+- Unit test cases for CRUD on JEST.
+
+Postman Collection documentation : https://documenter.getpostman.com/view/8141150/TzXunKZd
 
 ### 1) Install sequelize-cli --globall 
 `npm i sequelize-cli -g`
@@ -22,6 +29,6 @@ change username and password and database_name (if you want). on .env file
 ### 9) Running project (Development)
 `npm run dev`
 
-You can access via http://localhost:3000/
+You can access via http://localhost:5000/
 
 

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import _ from 'lodash'
 import { Op } from 'sequelize';
 import TowerModel from '../models/tower';
-import { redisClient, deleteCacheById } from '../utils/redis';
+import { redisClient } from '../utils/redis';
 import { getPagination, getPagingData } from '../utils/helper';
 import { app } from '../index'
 
@@ -18,7 +18,7 @@ export default class Tower {
     let condition: any = null;
     const { page, size } = req.query;
     const { limit, offset } = getPagination(page, size);
-    
+
     if (req.query['show-with-offices']) {
       condition = {
         offices: {
@@ -29,15 +29,19 @@ export default class Tower {
         }
       };
     }
-    redisClient.get('rediS-params', async (err, data) => {
-      if(data){
-        if(JSON.parse(data).query.page!=page || JSON.parse(data).query.size!=size || JSON.parse(data).query['show-with-offices']!=req.query['show-with-offices']){
-          await deleteCacheById('rediS');
-          redisClient.set('rediS-params', JSON.stringify({query:req.query}));
+    await new Promise((resolve, reject) => {
+      redisClient.get('rediS-params', async (err, data) => {
+        if (data) {
+          if (JSON.parse(data).query.page != page || JSON.parse(data).query.size != size || JSON.parse(data).query['show-with-offices'] != req.query['show-with-offices']) {
+            redisClient.del('rediS')
+            redisClient.set('rediS-params', JSON.stringify({ query: req.query }));
+          }
+          return resolve(1)
+        } else {
+          redisClient.set('rediS-params', JSON.stringify({ query: req.query }));
         }
-      }else{
-        redisClient.set('rediS-params', JSON.stringify({query:req.query}));
-      }
+        return resolve(1)
+      })
     })
     try {
       // Check the redis store for the data first
@@ -89,7 +93,7 @@ export default class Tower {
 
   async search(req: Request, res: Response) {
     try {
-      const { location, name, offices, rating  } = req.query;
+      const { location, name, offices, rating } = req.query;
       let data = await TowerModel.findAll({
         where: {
           [Op.and]: _.compact([
@@ -117,7 +121,7 @@ export default class Tower {
       let body = req.body;
       let data = await TowerModel.create(body);
       if (process.env.NODE_ENV !== 'test') {
-        redisClient.del('rediS', function(err, reply) {
+        redisClient.del('rediS', function (err, reply) {
           console.log(reply);
         });
         app.get('client').emit('onSave', 'New tower added.');
@@ -144,6 +148,9 @@ export default class Tower {
           id: id
         }
       });
+      if (process.env.NODE_ENV !== 'test') {
+        app.get('client').emit('onUpdate', 'Tower updated.');
+      }
       return res.json({
         status: 'ok',
         data: data
@@ -164,6 +171,9 @@ export default class Tower {
           id: id
         }
       });
+      if (process.env.NODE_ENV !== 'test') {
+        app.get('client').emit('onDelete', 'Tower deleted.');
+      }
       return res.json({
         status: 'ok',
         data: data
