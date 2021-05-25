@@ -1,6 +1,19 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const tower = sequelize.define('tower', {
+import { Sequelize, Model, DataTypes } from 'sequelize';
+import { sequelize } from './index';
+
+export default class TowerModel extends Model {
+  public id!: number;
+  public name!: string;
+  public location!: string | null;
+  public floors!: number;
+  public offices!: number;
+  public rating!: number;
+  public latitude!: string;
+  public longitude!: string;
+}
+
+TowerModel.init(
+  {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -10,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING(50)
     },
-    
+
     location: {
       type: DataTypes.STRING(50)
     },
@@ -28,9 +41,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     longitude: {
       type: DataTypes.STRING(50)
-    },
-  }, {
-    tableName:"tower"
-  });
-  return tower;
-};
+    }
+  },
+  {
+    tableName: "tower",
+    sequelize,
+  }
+);
+

@@ -1,5 +1,5 @@
-## Simple CRUD REST API in Express.js Featuring Sequelize ORM
-Basic simple example CRUD (Create,Read,Update,Delete) REST API on Nodejs using framework Express JS featuring Sequelize ORM with database MySQL with JWT based Authentication
+## Simple CRUD REST API with Express.js
+Basic simple REST API CRUD (Create,Read,Update,Delete) on Nodejs using framework Express JS featuring Sequelize ORM with database MySQL.
 
 ### 1) Install sequelize-cli --globall 
 `npm i sequelize-cli -g`
@@ -8,7 +8,7 @@ Basic simple example CRUD (Create,Read,Update,Delete) REST API on Nodejs using f
 `npm i`
 
 ### 5) Config database
-change username and password and database_name (if you want). on path /config/config.json
+change username and password and database_name (if you want). on .env file
 
 ### 6) Creating Database
 `sequelize db:create`
