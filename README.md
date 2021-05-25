@@ -29,6 +29,9 @@ change username and password and database_name (if you want). on .env file
 ### 9) Running project (Development)
 `npm run dev`
 
+### 10) Running project test case (Development)
+`npm run test`
+
 You can access via http://localhost:5000/
 
 
